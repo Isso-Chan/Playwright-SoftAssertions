@@ -10,15 +10,13 @@ SoftAssertions are integrated to the framework, in order to combine more steps i
 create an impediment to following steps in the same scenario.
 
 This framework is also designed to enable PARALLEL testing without failing due to missing or NULL values missing in the memory.
-Every THREAD has its own UNIQUE Browser, Page, Array (to save values in memory), SoftAssert etc. objects created in PlaywrightFactory.
+Every THREAD has its own UNIQUE Browser, Page, Map (to save values in memory), LogsAndAssert etc. objects created in PlaywrightFactory.
 
-ThreadArray (tlArray) helps to put the values in memory and retrieve them later in following steps in scenario.
-For this purpose, there are setKeyAndValueInThreadArray(String key, Object value) and
-getValueOfKeyFromThreadArray(String key) methods in BrowserUtilities class which includes many reusable methods.
+ThreadMap (tlMap) helps to put the values in memory and retrieve them later in following steps of scenario.
 
-For assertion, use Playwright.softAssert() for verification. If assertion will fail, screenShot will be taken automatically,
-saved to the memory automatically just after every softAssertion, since it is triggered in MySoftAssertions class which
-@Overrides onAssertionErrorCollected().
+For logs and assertion, use Playwright.logAndAssert(). If assertion will fail, screenShot will be taken and
+saved to the memory automatically just after every softAssertion, since it is triggered in MyLogsAndSoftAssertions class which
+@Overrides some methods. Log of the failing assertion will be written in terminal in RED color.
 
 
 

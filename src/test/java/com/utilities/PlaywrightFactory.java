@@ -10,7 +10,7 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.stepdefinitions.MySoftAssertions;
+import com.stepdefinitions.MyLogsAndSoftAssertions;
 import io.cucumber.messages.internal.com.google.common.collect.Maps;
 
 public class PlaywrightFactory {
@@ -21,7 +21,7 @@ public class PlaywrightFactory {
     private static ThreadLocal<Page> tlPage = new ThreadLocal<>();
     private static ThreadLocal<Playwright> tlPlaywright = new ThreadLocal<>();
     private static ThreadLocal<Map> tlMap = new ThreadLocal<>();
-    static ThreadLocal<MySoftAssertions> tlSoftAssert = new ThreadLocal<>();
+    static ThreadLocal<MyLogsAndSoftAssertions> tlLogAndAssert = new ThreadLocal<>();
 
 
     public static Playwright getPlaywright() {
@@ -44,15 +44,15 @@ public class PlaywrightFactory {
         }
         return tlMap.get();
     }
-    public static MySoftAssertions softAssert() {
-        if (tlSoftAssert.get() == null) {
-            MySoftAssertions costumSoftAssert = new MySoftAssertions();
-            tlSoftAssert.set(costumSoftAssert);
+    public static MyLogsAndSoftAssertions logAndAssert() {
+        if (tlLogAndAssert.get() == null) {
+            MyLogsAndSoftAssertions logAndAssert = new MyLogsAndSoftAssertions();
+            tlLogAndAssert.set(logAndAssert);
         }
-        return tlSoftAssert.get();
+        return tlLogAndAssert.get();
     }
-    public static void removeSoftAssert() {
-        tlSoftAssert.remove();
+    public static void removeLogAndAssert() {
+        tlLogAndAssert.remove();
     }
     public static void removeThreadMap() {
         tlMap.remove();
@@ -116,6 +116,6 @@ public class PlaywrightFactory {
     public static void takeScreenshot() {
         String date = BrowserUtilities.getDateAndTime();
         byte[] screenshot = PlaywrightFactory.getPage().screenshot(new Page.ScreenshotOptions());
-        BrowserUtilities.setKeyAndValueInThreadArray("screenShot_" + date, screenshot);
+        getThreadMap().put("screenShot_" + date, screenshot);
     }
 }

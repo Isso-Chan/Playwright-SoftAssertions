@@ -1,5 +1,6 @@
 package com.stepdefinitions;
 
+import com.utilities.BrowserUtilities;
 import com.utilities.PlaywrightFactory;
 import com.microsoft.playwright.Page;
 import io.cucumber.java.After;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.*;
+
 public class Hooks {
 
     PlaywrightFactory pf;
@@ -60,23 +62,40 @@ public class Hooks {
     @After(order = 1)
     public void tearDown(Scenario scenario) {
         if (scenario.isFailed()) {
-            byte[] screenshot;
-           Map<String, Object> map = PlaywrightFactory.getThreadMap();
-            System.out.println(" Map to be deleted = " + map);
-//            System.out.println("Array to be deleted = " + array);
-                for (String key : map.keySet()) {
-                    if (key.startsWith("screenShot")) {
-                        screenshot = (byte[]) map.get(key);
-                        scenario.attach(
-                                screenshot,
-                                "image/png",
-                                scenario.getName() + "_" + key);
-                    }
-                }
+            addScreenShotsToScenario(scenario);
         }
         // remove all objects created by in Thread
         PlaywrightFactory.removeThreadMap();
-        PlaywrightFactory.removeSoftAssert();
+        PlaywrightFactory.removeLogAndAssert();
         page.context().browser().close();
+    }
+
+    public void addScreenShotsToScenario(Scenario scenario) {
+        byte[] screenshot;
+        Map<String, Object> map = PlaywrightFactory.getThreadMap();
+//        System.out.println(" Map to be deleted = " + map);
+        boolean failedSoftAssertion = map.keySet().toString().contains("screenShot");
+        boolean inAssertAll = map.keySet().toString().contains("inAssertAll");
+
+        //if scenario fails but has NO screenshot taken after SoftAssertion, add one to scenario
+        //this occurs in case of stale element, no such element exception etc.
+        if (!inAssertAll) {
+            String date = BrowserUtilities.getDateAndTime();
+            screenshot = PlaywrightFactory.getPage().screenshot(new Page.ScreenshotOptions());
+            scenario.attach(
+                    screenshot,
+                    "image/png",
+                    scenario.getName() + "_ScreenShot_" + date);
+        } else if (failedSoftAssertion) {
+            for (String key : map.keySet()) {
+                if (key.startsWith("screenShot")) {
+                    screenshot = (byte[]) map.get(key);
+                    scenario.attach(
+                            screenshot,
+                            "image/png",
+                            scenario.getName() + "_" + key);
+                }
+            }
+        }
     }
 }

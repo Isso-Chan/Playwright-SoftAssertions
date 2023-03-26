@@ -10,41 +10,6 @@ import java.util.*;
 
 public class BrowserUtilities {
 
-
-    /**
-     * This method is crucial for parallel test. For every thread, a unique array is created and every key/value is saved to it.
-     * So whenever any value is called from memory during the execution of a scenario, it is retrieved without NULL value,
-     * if it was saved to memory before.
-     * After the execution of scenario, ALL KEYS are deleted with array in hooks @After
-     * @param key
-     * @param value
-     */
-//    public static void setKeyAndValueInThreadArray(String key, Object value) {
-//        Map<String,Object> map=new HashMap<>();
-//        map.put(key,value);
-//        LinkedHashMap<String, Object> linkedHashMap = Maps.newLinkedHashMap();
-//        PlaywrightFactory.getArray().add(map);
-//    }
-    public static void setKeyAndValueInThreadArray(String key, Object value) {
-        PlaywrightFactory.getThreadMap().put(key,value);
-    }
-
-
-    /**
-     * This method is crucial for parallel test.
-     * You may call the key that you saved with using setKeyAndValueInThreadArray().
-     * @param key
-     */
-    public static Object getValueOfKeyFromThreadArray(String key) {
-        Map map = PlaywrightFactory.getThreadMap();
-            for (Object k : map.keySet()) {
-             if(k.equals(key)){
-                 return map.get(key);
-             }
-        }
-        return null;
-    }
-
     /**
      * Performs a pause
      *
@@ -59,17 +24,6 @@ public class BrowserUtilities {
     }
 
 
-
-    public static boolean isDateValid(String dateStr, String format) {
-        DateFormat sdf = new SimpleDateFormat(format);
-        sdf.setLenient(false);
-        try {
-            sdf.parse(dateStr);
-        } catch (ParseException e) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * this method returns date and time as string

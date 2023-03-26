@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 
 //This class overrides onAssertionErrorCollected(), to be able to take screenShot after each softAssertion,
 // if assertion will fail after assertAll()
-public class MySoftAssertions extends SoftAssertions {
+public class MyLogsAndSoftAssertions extends SoftAssertions {
 
-    Logger logger= LoggerFactory.getLogger(MySoftAssertions.class);
-    public boolean isPass=true;
+    Logger logger= LoggerFactory.getLogger(MyLogsAndSoftAssertions.class);
+    private static boolean isPass=true;
+    private static boolean isFinish=false;
+
+
     @Override
     public void onAssertionErrorCollected(AssertionError assertionError) {
         PlaywrightFactory.takeScreenshot();
@@ -21,12 +24,18 @@ public class MySoftAssertions extends SoftAssertions {
     This method should be used for logging JUST AFTER an assertion, NOT for other logs, since it adds FAILED prefix to message
     and writes it with RED color. Until next assertion, isPass value stays as false.
      */
-    public void logAssertion(String message){
+    public void log(String message){
         if(isPass){
             logger.info(message);
         }else{
             logger.warn("\u001B[31m" +"FAILED! -> "+message+ "\u001B[0m");//Writes message in RED color to the terminal
+            isPass=true;
         }
+
+    }
+    public void assertAll() {
+        PlaywrightFactory.getThreadMap().put("inAssertAll",true);
+        assertAll(this);
     }
 
 }
