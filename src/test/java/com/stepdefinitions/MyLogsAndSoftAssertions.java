@@ -11,11 +11,12 @@ public class MyLogsAndSoftAssertions extends SoftAssertions {
 
     Logger logger= LoggerFactory.getLogger(MyLogsAndSoftAssertions.class);
     private static boolean isPass=true;
-    private static boolean isFinish=false;
+    private String errorMessage;
 
 
     @Override
     public void onAssertionErrorCollected(AssertionError assertionError) {
+        errorMessage=assertionError.toString().split("\\[")[1].split("]")[0];
         PlaywrightFactory.takeScreenshot();
         isPass=false;
     }
@@ -28,7 +29,7 @@ public class MyLogsAndSoftAssertions extends SoftAssertions {
         if(isPass){
             logger.info(message);
         }else{
-            logger.warn("\u001B[31m" +"FAILED! -> "+message+ "\u001B[0m");//Writes message in RED color to the terminal
+            logger.warn("\u001B[31m" +"FAILED! -> "+errorMessage+ "\u001B[0m");//Writes message in RED color to the terminal
             isPass=true;
         }
 

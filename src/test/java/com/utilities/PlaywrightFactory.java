@@ -44,7 +44,7 @@ public class PlaywrightFactory {
         }
         return tlMap.get();
     }
-    public static MyLogsAndSoftAssertions logAndAssert() {
+    public static MyLogsAndSoftAssertions logOrAssert() {
         if (tlLogAndAssert.get() == null) {
             MyLogsAndSoftAssertions logAndAssert = new MyLogsAndSoftAssertions();
             tlLogAndAssert.set(logAndAssert);

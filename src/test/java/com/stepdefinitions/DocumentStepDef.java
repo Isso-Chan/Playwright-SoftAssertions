@@ -63,22 +63,19 @@ public class DocumentStepDef {
     @And("user clicks on the card of project {string}")
     public void userClicksOnTheCardOfProject(String projectName) {
         page.locator(oaMan.locateProjectWithName(projectName)).getByText("Öffnen").click();
-        logAndAssert().log("User clicked on the project '{}' to open");
-//        logger.info("User clicked on the project '{}' to open", projectName);
+        logOrAssert().log("User clicked on the project '{}' to open");
     }
 
     @And("user navigates {string} tab")
     public void userNavigatesTab(String tabName) {
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(tabName)).click();
-        logAndAssert().log("User navigates {}");
-//        logger.info("User navigates {}", tabName);
+        logOrAssert().log("User navigates {}");
     }
 
     @When("user clicks on {string} button on the page")
     public void userClicksOnButtonOnThePage(String buttonName) {
         page.getByText(buttonName).click();
-        logAndAssert().log("User clicks on '{}' button on the page");
-//        logger.info("User clicks on '{}' button on the page", buttonName);
+        logOrAssert().log("User clicks on '{}' button on the page");
     }
 
     @And("user fills {string} as {string}")
@@ -87,15 +84,13 @@ public class DocumentStepDef {
         String valueWithTime = value + "_" + dateAndTime;
         getThreadMap().put("valueWithTime", valueWithTime);
         page.getByLabel(label).fill(valueWithTime);
-        logAndAssert().log("User entered '{}' to the field '{}'");
-//        logger.info("User entered '{}' to the field '{}'", value, label);
+        logOrAssert().log("User entered '{}' to the field '{}'");
     }
 
     @And("user clicks {string} button on the dialog")
     public void userClicksButtonOnTheDialog(String buttonname) {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(buttonname)).click();
-        logAndAssert().log("User clicked on '{}' button on the dialog");
-//        logger.info("User clicked on '{}' button on the dialog", buttonname);
+        logOrAssert().log("User clicked on '{}' button on the dialog");
     }
 
     @Then("created document should be displayed on the page")
@@ -144,13 +139,11 @@ public class DocumentStepDef {
 
     @Then("{string} should be equal to {string}")
     public void shouldBeEqualTo(String value1, String value2) {
-        logAndAssert().assertThat(value1).as("Values are NOT verified!").isEqualTo(value2);
-        logAndAssert().log("Values are verified as equal: "+value1 +"="+ value2);
+        logOrAssert().assertThat(value1).as("Values are NOT verified!").isEqualTo(value2);
+        logOrAssert().log("Values are verified as equal: "+value1 +"="+ value2);
     }
-
-//    @After(order = 2)
     @And("all softAssertions are executed")
     public void allSoftAssertionsAreExecuted() {
-        logAndAssert().assertAll();
+        logOrAssert().assertAll();
     }
 }

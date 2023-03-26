@@ -32,7 +32,7 @@ public class LoginCucumberTest {
     @When("User verify the Page title")
     public void user_verify_the_page_title() {
         String title = loginPage.verifyTitle();
-        logAndAssert().assertThat(title).as("Title is NOT verified!").isEqualTo("Swag Labs");
+        logOrAssert().assertThat(title).as("Title is NOT verified!").isEqualTo("Swag Labs");
     }
 
     @When("User logged in the app using username {string} and password {string}")
@@ -43,7 +43,7 @@ public class LoginCucumberTest {
     @Then("User verify the product name {string}")
     public void user_verify_the_product_name(String expected) {
         String productName = homePage.getProductName();
-        logAndAssert().assertThat(expected).as("Verification is NOT done!").isEqualTo(productName);
+        logOrAssert().assertThat(expected).as("Verification is NOT done!").isEqualTo(productName);
     }
 
     @Then("User logout from the application")

@@ -38,11 +38,11 @@ public class OAMan {
     public void verifyDocument(String expectedName){
         BrowserUtilities.waitFor(1000);
         List<String> documents = page.locator(documentNames).allTextContents();
-        logAndAssert().assertThat(documents.contains(expectedName)).as("'"+expectedName + "' is NOT verified on the " +
+        logOrAssert().assertThat(documents.contains(expectedName)).as("'"+expectedName + "' is NOT verified on the " +
                 "page!").isTrue();
 
 //        logger.info("Verified that "+expectedName+" is present on the page");
-        logAndAssert().log("Verified that "+expectedName+" is present on the page");
+        logOrAssert().log("Verified that "+expectedName+" is present on the page");
     }
 
 
