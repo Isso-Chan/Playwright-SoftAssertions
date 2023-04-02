@@ -76,17 +76,8 @@ public class Hooks {
 //        System.out.println(" Map to be deleted = " + map);
         boolean failedSoftAssertion = map.keySet().toString().contains("screenShot");
         boolean inAssertAll = map.keySet().toString().contains("inAssertAll");
-
-        //if scenario fails but has NO screenshot taken after SoftAssertion, add one to scenario
-        //this occurs in case of stale element, no such element exception etc.
-        if (!inAssertAll) {
-            String date = BrowserUtilities.getDateAndTime();
-            screenshot = PlaywrightFactory.getPage().screenshot(new Page.ScreenshotOptions());
-            scenario.attach(
-                    screenshot,
-                    "image/png",
-                    scenario.getName() + "_ScreenShot_" + date);
-        } else if (failedSoftAssertion) {
+       //attach first screenShots of all softAssertions
+        if (failedSoftAssertion) {
             for (String key : map.keySet()) {
                 if (key.startsWith("screenShot")) {
                     screenshot = (byte[]) map.get(key);
@@ -97,5 +88,16 @@ public class Hooks {
                 }
             }
         }
+        //if scenario fails before assertAll() not because of softAssertions, add one screenShot to scenario
+        //this occurs in case of stale element, no such element exception etc.
+        if (!inAssertAll) {
+            String date = BrowserUtilities.getDateAndTime();
+            screenshot = PlaywrightFactory.getPage().screenshot(new Page.ScreenshotOptions());
+            scenario.attach(
+                    screenshot,
+                    "image/png",
+                    scenario.getName() + "_ScreenShot_" + date);
+        }
+
     }
 }
